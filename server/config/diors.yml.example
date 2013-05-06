@@ -1,7 +1,8 @@
 production: &base
   diors:
-    vm_root_path: VM_ROOT_PATH
-    vm_user: dp
+    vm:
+      root_path: VM_ROOT_PATH
+      user: VM_USER
 
 development:
   <<: *base
