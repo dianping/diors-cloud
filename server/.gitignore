@@ -103,3 +103,4 @@ tmp/restart.txt
 *.sublime-project
 
 config/database.yml
+config/diors.yml
