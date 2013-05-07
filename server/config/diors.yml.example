@@ -3,9 +3,14 @@ production: &base
     vm:
       root_path: VM_ROOT_PATH
       user: VM_USER
+      memory: VM_MEMORY
     network:
       nic: NETWORK_INTERFACE_CARD
       bridge: BRIDGED_NETWORK_INTERFACE
+      netmask: NETWORK_NETMASK
+    box:
+      list: BOX_LIST
+      default: DEFAULT_BOX
 
 development:
   <<: *base
