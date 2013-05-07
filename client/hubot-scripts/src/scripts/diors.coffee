@@ -28,30 +28,39 @@ instance ssh:
       """
 
 module.exports = (robot) ->
+  
+  user_email = (msg) -> "#{msg.message.user.name}@#{msg.message.user.domain}"
+  
+  # command: diors help	
   robot.respond /diors( help)?$/i, (msg) ->
     msg.send diors_help
-    
-  robot.respond /diors init (\w+)$/i, (msg) ->
-    name = msg.match[1]
-    msg.send "Initiating app #{name}...about 30 sec"
+  
+  # command: diors init <app_name> <box_type>
+  robot.respond /diors init (\w+)( ubuntu| centos)?$/i, (msg) ->
+    app_name = msg.match[1]
+    box_type = if msg.match[2] then msg.match[2].trim() else "ubuntu"
+    msg.send "Initiating app #{app_name} with #{box_type} image...about 30 sec"
     # call API to create an instance
     # TODO
     # call API to bind DNS
     # TODO
-    msg.send "Instance #{name}.diors.it initiated"
+    msg.send "Instance #{app_name}.diors.it initiated"
     msg.send "Login Password: TODO"
-    msg.send "Now you can use type \"ssh dp@#{name}.diors.it -p TODO\" in the terminal to login the instance"
+    msg.send "Now you can use type \"ssh dp@#{app_name}.diors.it -p TODO\" in the terminal to login the instance"
   
   robot.respond /diors destroy (\w+)$/i, (msg) ->
-    name = msg.match[1]
-    user_name = msg.message.user.name
-    user_domain = msg.message.user.domain
-    user_email = "#{user_name}@#{user_domain}"
-    msg.send "Destroying app #{name}...about 15 sec"
+    app_name = msg.match[1]
+    msg.send "Destroying app #{app_name}...about 15 sec"
     # call API to check privilege
     # call API to destroy the instance
-    msg.send "App #{name} has been destroyed"
+    msg.send "App #{app_name} has been destroyed"
     msg.send "Thank you for using Diors Cloud"
+  
+  robot.respond /diors list$/i, (msg) ->
+  	
+
+
+    
     
     
   
