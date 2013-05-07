@@ -2,18 +2,24 @@ usage: diors <command> [<args>]
 
 command list:
    diors help
-   diors init <app-name> 	
-   diors destroy <app-name>
-   diors list
-   diors assign <app-name> <user-account>
-   diors instance <app-name> up
-   diors instance <app-name> halt
-   diors instance <app-name> suspend
-   diors login <app-name> bindkey <key-string>
-   diors login <app-name> password
 
-instance login:
-   login by ssh-key:
-      ssh dp@<app-name>.diors.it
-   login by passwd:
-      ssh dp@<app-name>.diors.it -p <passwd>      
+   diors init <app_name> <box_type>
+   diors destroy <app_name>
+   diors list
+
+   diors user add <app_name> <user_account>
+   diors user delete <app_name> <user_account>
+   diors user list <app_name>
+
+   diors instance <app_name> up
+   diors instance <app_name> halt
+   diors instance <app_name> suspend
+
+   diors ssh <app_name> key <key_string>
+   diors ssh <app_name> password
+
+instance ssh:
+   by ssh-key:
+      ssh dp@<app_name>.diors.it
+   by passwd:
+      ssh dp@<app_name>.diors.it -p <passwd>      
