@@ -3,6 +3,9 @@ production: &base
     vm:
       root_path: VM_ROOT_PATH
       user: VM_USER
+    network:
+      nic: NETWORK_INTERFACE_CARD
+      bridge: BRIDGED_NETWORK_INTERFACE
 
 development:
   <<: *base

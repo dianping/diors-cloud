@@ -1,0 +1,12 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "<%= box_name %>"
+  config.vm.network :public_network, :bridge => "<%= bridge %>", :auto_config => false
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
+    vb.name = "<%= app_name %>"
+  end
+  config.vm.provision :shell, inline: "/sbin/ifconfig <%= nic %> <%= ip %> netmask <%= netmask %> up"
+end

@@ -9,5 +9,9 @@ module Cloud
       @env ||= Vagrant::Environment.new({:ui_class => Vagrant::UI::Colored, :cwd => project.path})
     end
 
+    def vagrantfile
+      project.path.join("Vagrantfile")
+    end
+
   end
 end
