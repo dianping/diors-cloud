@@ -1,3 +1,17 @@
+# Description:
+#   Diors Cloud
+#
+# Dependencies:
+#   None
+#
+# Configuration:
+#	None
+#
+# Commands:
+#	diors
+#
+# Author:
+#   Figo
 
 diors_help = """
 usage: diors <command> [<args>]
@@ -111,19 +125,4 @@ module.exports = (robot) ->
   	key_string = msg.match[2]
   	msg.send "Bind key #{key_string} to app #{app_name}"
   	msg.send "Now you can type \"ssh dp@#{app_name}.diors.it\" in the terminal to login the app server"
-  
-  
-  	
-
-  
-  
-
-  	
-
-
-    
-    
-    
-  
-
-  
+ 
