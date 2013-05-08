@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'securerandom'
+require 'pathname'
 
 class Project < ActiveRecord::Base
   attr_accessible :name, :slug, :token
@@ -18,7 +19,7 @@ class Project < ActiveRecord::Base
   after_create :mkdir
 
   def path
-    @path ||= "#{Settings.diors.vm.root_path}/#{slug}"
+    @path ||= Pathname.new("#{Settings.diors.vm.root_path}/#{slug}")
   end
 
   private

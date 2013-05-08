@@ -5,6 +5,3 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-user = User.new(name: 'admin', email: 'admin@diors-cloud.com', password: 'password', password_confirmation: 'password')
-user.admin = true
-user.save

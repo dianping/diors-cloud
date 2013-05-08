@@ -118,6 +118,9 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     ref (1.0.4)
+    seed-fu (2.2.0)
+      activerecord (~> 3.1)
+      activesupport (~> 3.1)
     settingslogic (2.0.9)
     slop (3.4.4)
     sprockets (2.2.2)
@@ -166,6 +169,7 @@ DEPENDENCIES
   mysql2
   pry-rails
   rails (= 3.2.12)
+  seed-fu (= 2.2.0)
   settingslogic (~> 2.0.9)
   therubyracer
   twitter-bootstrap-rails
