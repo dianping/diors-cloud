@@ -9,10 +9,7 @@ module Cloud
       end
 
       def execute
-        with_target_vms([]) do |vm|
-          vm.action(:resume) if vm.state.id == :saved
-        end
-        true
+        with_vm(:saved) { |vm| vm.action(:resume) and true }
       end
 
       register(:execute) { machine.to_up }

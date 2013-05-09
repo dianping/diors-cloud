@@ -9,10 +9,7 @@ module Cloud
       end
 
       def execute
-        with_target_vms([]) do |vm|
-          vm.action(:suspend)
-        end
-        true
+        with_vm(:running, :saved) { |vm| vm.action(:suspend) and true }
       end
 
       register(:execute) { machine.to_suspend }

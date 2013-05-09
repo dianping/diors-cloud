@@ -9,10 +9,7 @@ module Cloud
       end
 
       def execute
-        with_target_vms([]) do |vm|
-          vm.action(:halt, :force_halt => options[:force])
-        end
-        true
+        with_vm(:running, :saved, :poweroff) { |vm| vm.action(:halt, :force_halt => options[:force]) and true }
       end
 
       register(:execute) { machine.to_halt }

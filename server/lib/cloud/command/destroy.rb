@@ -9,10 +9,7 @@ module Cloud
       end
 
       def execute
-        with_target_vms([], :reverse => true) do |vm|
-          vm.action(:destroy, :force_confirm_destroy => options[:force])
-        end
-        true
+        with_vm { |vm|vm.action(:destroy, :force_confirm_destroy => options[:force]) and true }
       end
 
       register(:execute) { machine.to_unassign }
