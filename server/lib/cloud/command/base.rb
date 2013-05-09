@@ -11,7 +11,7 @@ module Cloud
       include Hooks::Base
 
       attr_reader :project, :options, :errors
-      def_delegators :machine, :env, :vm
+      def_delegators :machine, :vm
 
       def initialize(project, options = {})
         @project = project 
@@ -25,6 +25,10 @@ module Cloud
       end
 
       def execute
+      end
+
+      def env
+        machine.try(:env) || Vagrant::Environment.new({:ui_class => Vagrant::UI::Silent, :cwd => project.path})
       end
 
       def machine
