@@ -3,7 +3,7 @@ class CreateMachines < ActiveRecord::Migration
     create_table :machines do |t|
       t.string :ip
       t.string :uuid
-      t.integer :status
+      t.integer :status, :default => -1
       t.integer :project_id
 
       t.timestamps
