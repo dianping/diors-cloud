@@ -13,4 +13,7 @@ DiorsCloud::Application.routes.draw do
     get 'password/forget' => 'users/passwords#new', :as => :new_user_password
     post 'password' => 'users/passwords#create', :as => :user_password
   end
+
+  require 'api'
+  mount DiorsCloud::API => '/api'
 end

@@ -29,6 +29,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     arel (3.0.2)
+    backports (2.6.7)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
     childprocess (0.3.9)
@@ -49,6 +50,7 @@ GEM
       debugger-ruby_core_source (~> 1.2.0)
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.2.0)
+    descendants_tracker (0.0.1)
     devise (2.2.3)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -59,6 +61,20 @@ GEM
       multi_json (~> 1.0)
     ffi (1.7.0)
     friendly_id (4.0.9)
+    grape (0.3.2)
+      activesupport
+      builder
+      hashie (>= 1.2.0)
+      multi_json (>= 1.3.2)
+      multi_xml (>= 0.5.2)
+      rack
+      rack-accept
+      rack-mount
+      virtus
+    grape-entity (0.2.0)
+      activesupport
+      multi_json (>= 1.3.2)
+    hashie (2.0.3)
     hike (1.2.2)
     i18n (0.6.4)
     journey (1.0.4)
@@ -80,6 +96,7 @@ GEM
     method_source (0.8.1)
     mime-types (1.23)
     multi_json (1.7.2)
+    multi_xml (0.5.3)
     mysql2 (0.3.11)
     net-scp (1.1.0)
       net-ssh (>= 2.6.5)
@@ -93,8 +110,12 @@ GEM
     pry-rails (0.2.2)
       pry (>= 0.9.10)
     rack (1.4.5)
+    rack-accept (0.4.5)
+      rack (>= 0.4)
     rack-cache (1.2)
       rack (>= 0.4)
+    rack-mount (0.8.3)
+      rack (>= 1.0.0)
     rack-ssl (1.3.3)
       rack
     rack-test (0.6.2)
@@ -153,6 +174,9 @@ GEM
       log4r (~> 1.1.9)
       net-scp (~> 1.1.0)
       net-ssh (~> 2.6.6)
+    virtus (0.5.4)
+      backports (~> 2.6.1)
+      descendants_tracker (~> 0.0.1)
     warden (1.2.1)
       rack (>= 1.0)
 
@@ -164,6 +188,8 @@ DEPENDENCIES
   debugger
   devise (>= 2.2.3)
   friendly_id (~> 4.0.9)
+  grape (~> 0.3.1)
+  grape-entity (~> 0.2.0)
   jquery-rails
   less-rails
   mysql2
