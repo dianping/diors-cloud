@@ -15,5 +15,6 @@ DiorsCloud::Application.routes.draw do
   end
 
   require 'api'
+  DiorsCloud::API.logger Rails.logger
   mount DiorsCloud::API => '/api'
 end

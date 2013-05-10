@@ -11,6 +11,8 @@ production: &base
     box:
       list: BOX_LIST
       default: DEFAULT_BOX
+    hubot:
+      token: HUBOT_TOKEN   
 
 development:
   <<: *base

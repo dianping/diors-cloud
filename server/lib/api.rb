@@ -5,7 +5,7 @@ module DiorsCloud
     version 'v1', using: :path
 
     rescue_from ActiveRecord::RecordNotFound do
-      rack_response({'message' => '404 Not found'}.to_json, 404)
+      rack_response({'message' => '404 Not found', 'status' => 404 }.to_json, 404)
     end
 
     rescue_from :all do |exception|
@@ -17,12 +17,13 @@ module DiorsCloud
       message << exception.annoted_source_code.to_s if exception.respond_to?(:annoted_source_code)
       message << "  " << trace.join("\n  ")
 
-      rack_response({'message' => '500 Internal Server Error'}, 500)
+      API.logger.add Logger::FATAL, message 
+      rack_response({'message' => '500 Internal Server Error', 'status' => 500 }, 500)
     end
 
     format :json
     helpers APIHelpers
     
-    mount Hubot
+    mount App
   end
 end
