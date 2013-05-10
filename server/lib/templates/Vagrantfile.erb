@@ -4,9 +4,12 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "<%= box_name %>"
   config.vm.network :public_network, :bridge => "<%= bridge %>", :auto_config => false
+  config.vm.synced_folder "shared", "/data"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.hostname = "<%= app_name %>"
   config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "4096"]
+    vb.customize ["modifyvm", :id, "--memory", "<%= memory %>"]
     vb.name = "<%= app_name %>"
   end
-  config.vm.provision :shell, inline: "/sbin/ifconfig <%= nic %> <%= ip %> netmask <%= netmask %> up"
+  config.ssh.username = "<%= user %>"
 end

@@ -9,10 +9,11 @@ module Cloud
       end
 
       def execute
+        require_args(:project)
         with_vm { |vm|vm.action(:destroy, :force_confirm_destroy => options[:force]) and true }
       end
 
-      register(:execute) { machine.to_unassign }
+      register(:execute, skip_hook_when: false) { project.clear }
     end
   end
 end

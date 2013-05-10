@@ -9,10 +9,11 @@ module Cloud
       end
 
       def execute
+        require_args(:project)
         with_vm(:saved) { |vm| vm.action(:resume) and true }
       end
 
-      register(:execute) { machine.to_up }
+      register(:execute, skip_hook_when: false) { machine.to_up }
     end
   end
 end

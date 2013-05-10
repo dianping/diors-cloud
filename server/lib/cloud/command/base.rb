@@ -2,6 +2,7 @@ module Cloud
 
   class NoIpAvailableError < StandardError; end
   class MachineNotAssignedError < StandardError; end
+  class MissingArgumentError < StandardError; end
 
   module Command
 
@@ -14,6 +15,7 @@ module Cloud
       def_delegators :machine, :vm
 
       def initialize(project, options = {})
+        options = default_options.merge(options)
         @project = project 
         @options = options
         @errors = Errors.new
@@ -28,7 +30,7 @@ module Cloud
       end
 
       def env
-        machine.try(:env) || Vagrant::Environment.new({:ui_class => Vagrant::UI::Silent, :cwd => project.path})
+        Vagrant::Environment.new({:ui_class => Vagrant::UI::Silent, :cwd => project.path})
       end
 
       def machine
@@ -37,11 +39,26 @@ module Cloud
 
       def with_vm(*states)
         states = Array(states)
+        if machine.blank?
+          errors.add("This project has not been assigned a machine.")
+          return false
+        end
         if vm.present? && (states.blank? ? true : states.include?(vm.state.id))
           yield vm
         else
           errors.add("You can not do this action, the status of this machine is #{machine.vm_status}.")
           false
+        end
+      end
+
+      private
+      def default_options
+        {machine_required: true}
+      end
+
+      def require_args(*args)
+        args.each do |arg|
+          raise MissingArgumentError.new(arg) if send(arg).blank?
         end
       end
 
