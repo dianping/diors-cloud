@@ -25,8 +25,30 @@ module DiorsCloud
         end
 
         #app user action
-        get ":app_name/user/delete/:user_account" do 
-          { status: "usr_delete" }
+        #http://localhost:3000/api/v1/app/roger1/user/add?user_account=ttt@dianping.com&hubot_token=123456&email=roger.chen@dianping.com
+        get ":app_name/user/add" do 
+          auth_project_owner!
+          user = User.where(email: params[:user_account]).first
+          unless user
+            user = User.new(name: params[:user_account].split('@')[0], email: params[:user_account], password: params[:user_account], password_confirmation: params[:user_account])
+            user.save
+          end
+            
+          if current_project.has_member? user 
+            { status: 503, message: 'add user existed' }
+          else  
+            current_project.users << user
+            { status: 200 }
+          end  
+        end
+
+        get ":app_name/user/delete" do 
+          auth_project_owner!
+          user = User.where(email: params[:user_account]).first
+          not_found!('user') unless user
+          forbidden!('delete owner') if current_project.owner == user
+          current_project.users.delete(user)
+          { status: 200 }
         end
 
         get ":app_name/user/list" do 
