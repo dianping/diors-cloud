@@ -29,6 +29,7 @@ gem 'vagrant', '1.2.2'
 gem "friendly_id", "~> 4.0.9"
 gem "settingslogic", "~> 2.0.9"
 gem 'seed-fu', '2.2.0'
+gem "rye", "~> 0.9.8"
 
 group :development, :test do
   gem 'debugger'

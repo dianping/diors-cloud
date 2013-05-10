@@ -11,10 +11,10 @@ module Hooks
     end
 
     module ClassMethods
-      def register(method_name, &block)
+      def register(method_name, *options, &block)
         if block_given?
           @__hooks__[method_name] ||= []
-          @__hooks__[method_name] << block
+          @__hooks__[method_name] << [options.extract_options!, block]
           bind_hook(method_name)
         end
       end
@@ -36,8 +36,10 @@ module Hooks
           class_eval <<-EOF
             def #{method_name}_with_hook
               __result__ = #{method_name}_without_hook
-              self.class.instance_variable_get(:@__hooks__)[:#{method_name}].each do |hook|
-                 hook.arity == 1 ? hook.call(self) : self.instance_eval(&hook)
+              self.class.instance_variable_get(:@__hooks__)[:#{method_name}].each do |options, hook|
+                unless options.has_key?(:skip_hook_when) && options[:skip_hook_when] == __result__
+                  hook.arity == 1 ? hook.call(self) : self.instance_eval(&hook)
+                end
               end
               __result__
             end

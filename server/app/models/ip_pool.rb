@@ -18,10 +18,19 @@ class IpPool < ActiveRecord::Base
         ip
       end
     end
+
+    def withdraw(ipstr)
+      ip = IpPool.used.find_by_ip(ipstr)
+      return false if ip.blank?
+      ip.withdraw
+    end
   end
 
   def to_used
     update_attributes(status: 0)
   end
 
+  def withdraw
+    update_attributes(status: 1)
+  end
 end

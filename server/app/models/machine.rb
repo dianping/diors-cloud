@@ -2,12 +2,13 @@ class Machine < ActiveRecord::Base
   attr_accessible :ip, :status, :uuid, :project_id
   
   belongs_to :project
+  has_and_belongs_to_many :keys
   validates_presence_of :ip, :project_id
 
   STATUS = { unassign: -1, halt: 0, up: 1, suspend: 2 }
 
-  def to_unassign
-    update_attributes(status: STATUS[:unassign], uuid: nil) unless vm_exists?
+  def withdraw
+    self.destroy if !vm_exists? && IpPool.withdraw(self.ip)
   end
 
   def to_up
@@ -24,12 +25,7 @@ class Machine < ActiveRecord::Base
 
   def vm_exists?
     return false if uuid.blank?
-    begin
-      VagrantPlugins::ProviderVirtualBox::Driver::Meta.new(uuid)
-      true
-    rescue VagrantPlugins::ProviderVirtualBox::Driver::Meta::VMNotFound
-      false
-    end
+    meta.present? ? true : false
   end
 
   def env
@@ -60,5 +56,43 @@ class Machine < ActiveRecord::Base
     when :saved then :suspended
     else state
     end
+  end
+
+  def meta
+    begin
+      VagrantPlugins::ProviderVirtualBox::Driver::Meta.new(uuid)
+    rescue VagrantPlugins::ProviderVirtualBox::Driver::Meta::VMNotFound
+      nil
+    end
+  end
+
+  def bind_key(key)
+    if vm_status_match?(:running) && key && key.pub_key.present?
+      self.keys << key
+      vm.communicate.tap do |comm|
+        comm.execute("mkdir ~/.ssh", {error_check: false})
+        comm.execute("touch ~/.ssh/authorized_keys")
+        if !comm.test("grep -Fw '#{key.pub_key}' ~/.ssh/authorized_keys")
+          comm.execute("echo '#{key.pub_key}' >> ~/.ssh/authorized_keys")
+          return key.update_attribute(:binded, true)
+        end
+      end
+    end
+    false
+  end
+
+  def reset_password(password)
+    if vm_status_match?(:running) && password.present?
+      vm.communicate.tap do |comm|
+        comm.execute("openssl passwd -crypt '#{password}'") do |std, output|
+          encrypted_password = output.strip
+          if encrypted_password.present?
+            comm.sudo("usermod --password #{encrypted_password} #{Settings.diors.vm.user}")
+            return true
+          end
+        end
+      end
+    end
+    false
   end
 end

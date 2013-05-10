@@ -9,15 +9,20 @@ module Cloud
       end
 
       def execute
-        env.batch(true) do |batch|
-          with_target_vms([]) do |vm|
-            batch.action(vm, :up)
+        require_args(:project)
+        if vagrantfile.exist?
+          env.batch(true) do |batch|
+            with_target_vms([]) do |vm|
+              batch.action(vm, :up)
+            end
           end
+          true
+        else
+          errors.add("You need initialize this project First.") and false
         end
-        true
       end
 
-      register(:execute) { machine.to_up }
+      register(:execute, skip_hook_when: false) { machine.to_up }
 
     end
   end
