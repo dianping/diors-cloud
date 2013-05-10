@@ -4,6 +4,10 @@ module DiorsCloud
       @current_user ||= get_current_user
     end
 
+    def current_project
+      @current_project ||= Project.find_by_name(params[:app_name])
+    end  
+
     # def user_project
     #   @project ||= find_project
     #   @project || not_found!
@@ -23,6 +27,15 @@ module DiorsCloud
     #   object.page(params[:page]).per(params[:per_page].to_i)
     # end
 
+    def auth_project_user!
+      not_found!('app') unless current_project
+      forbidden!('project') unless current_project.has_member? current_user
+    end  
+
+    def auth_project_owner!
+      not_found!('app') unless current_project
+      forbidden!('project own') unless current_project.owner == current_user
+    end  
     # def authenticate!
     #   unauthorized! unless current_user
     # end
@@ -62,8 +75,11 @@ module DiorsCloud
 
     # # error helpers
 
-    def forbidden!
-      render_api_error!('403 Forbidden', 403)
+    def forbidden!(resource = nil)
+      message = ["403"]
+      message << resource if resource
+      message << "Not Allowed"
+      render_api_error!(message.join(' '), 403)
     end
 
     # def bad_request!(attribute)
@@ -72,12 +88,12 @@ module DiorsCloud
     #   render_api_error!(message.join(' '), 400)
     # end
 
-    # def not_found!(resource = nil)
-    #   message = ["404"]
-    #   message << resource if resource
-    #   message << "Not Found"
-    #   render_api_error!(message.join(' '), 404)
-    # end
+    def not_found!(resource = nil)
+      message = ["404"]
+      message << resource if resource
+      message << "Not Found"
+      render_api_error!(message.join(' '), 404)
+    end
 
     # def unauthorized!
     #   render_api_error!('401 Unauthorized', 401)
@@ -88,16 +104,16 @@ module DiorsCloud
     # end
 
     def render_api_error!(message, status)
-      error!({'message' => message}, status)
+      error!({'message' => message, 'status' => status }, status)
     end
 
     private
 
     def get_current_user
       if params[:token]
-        User.find_by_token(params[:token])
+        User.find_by_token(params[:token]) || forbidden!
       elsif params[:hubot_token] == Settings.diors.hubot.token && params[:email]
-        User.find_by_email(params[:email])
+        User.find_by_email(params[:email]) || forbidden!
       else
         forbidden!  
       end  

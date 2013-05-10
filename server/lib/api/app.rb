@@ -18,8 +18,10 @@ module DiorsCloud
           { status: "destroy" }
         end
 
+        #http://localhost:3000/api/v1/app/list?hubot_token=123456&email=roger.chen@dianping.com
+        #http://localhost:3000/api/v1/app/list?token=8b242e951d4fb822
         get "list" do 
-          { status: 200, app:current_user.projects.map{|p| { name: p.name, owner: p.owner.name }} }
+          { status: 200, app: current_user.projects.map{|p| { name: p.name, owner: p.owner.name }} }
         end
 
         #app user action
@@ -28,37 +30,30 @@ module DiorsCloud
         end
 
         get ":app_name/user/list" do 
-          project = Project.find_by_name(params[:app_name])
-          if project
-            users = project.users.map{|u| { name: u.email, role: ((project.owner == u) ? 'owner' : 'member') } }
-            { 
-              status: 200, 
-              users: users
-            } 
-          else  
-            { status: 500, message: "app not found" }
-          end  
+          auth_project_user!
+          users = current_project.users.map{|u| { name: u.email, role: ((current_project.owner == u) ? 'owner' : 'member') } }
+          { status: 200, users: users } 
         end
 
         #app vm action
-        get ":app_name/up" do 
+        get ":app_name/inst/up" do 
           { status: "usr_up" }
         end
 
-        get ":app_name/halt" do 
+        get ":app_name/inst/halt" do 
           { status: "halt " }
         end
 
-        get ":app_name/suspend" do 
+        get ":app_name/inst/suspend" do 
           { status: "suspend" }
         end
 
         #app auth action
-        get ":app_name/bindkey/:key_string" do 
+        get ":app_name/ssh/bindkey/:key_string" do 
           { status: "halt " }
         end
 
-        get ":app_name/passwd/:password" do 
+        get ":app_name/ssh/passwd/:password" do 
           { status: "password" }
         end
 

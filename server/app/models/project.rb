@@ -22,6 +22,10 @@ class Project < ActiveRecord::Base
     @path ||= Pathname.new("#{Settings.diors.vm.root_path}/#{slug}")
   end
 
+  def has_member?(user)
+    users.exists?(user.id)
+  end  
+
   private
   def mkdir
     FileUtils.mkdir_p(path)
