@@ -68,13 +68,12 @@ class Machine < ActiveRecord::Base
 
   def bind_key(key)
     if vm_status_match?(:running) && key && key.pub_key.present?
-      self.keys << key
       vm.communicate.tap do |comm|
         comm.execute("mkdir ~/.ssh", {error_check: false})
         comm.execute("touch ~/.ssh/authorized_keys")
         if !comm.test("grep -Fw '#{key.pub_key}' ~/.ssh/authorized_keys")
           comm.execute("echo '#{key.pub_key}' >> ~/.ssh/authorized_keys")
-          return key.update_attribute(:binded, true)
+          self.keys << key
         end
       end
     end

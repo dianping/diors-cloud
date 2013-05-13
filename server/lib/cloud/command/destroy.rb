@@ -13,7 +13,7 @@ module Cloud
         with_vm { |vm|vm.action(:destroy, :force_confirm_destroy => options[:force]) and true }
       end
 
-      register(:execute, skip_hook_when: false) { project.clear }
+      register(:execute) { project.clear }
     end
   end
 end

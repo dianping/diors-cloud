@@ -1,3 +1,5 @@
+require 'ipaddr'
+
 module Cloud
 
   module Command
@@ -38,7 +40,11 @@ module Cloud
       end
 
       def init_params
-        @init_params ||= Settings.diors.vm.to_hash.merge(box_name: box, app_name: project.slug, ip: IpPool.assign.ip)
+        @init_params ||= Settings.diors.vm.to_hash.merge(box_name: box, app_name: project.slug).merge(network_params(IpPool.assign.ip))
+      end
+
+      def network_params(ip)
+        {ip: ip, mask: "255.255.255.0", gateway: ip.sub(/\d+$/, '1')}
       end
     end
   end
