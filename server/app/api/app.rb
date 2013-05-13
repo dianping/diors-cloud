@@ -21,7 +21,10 @@ class App < Grape::API
     #http://localhost:3000/api/v1/app/list?hubot_token=123456&email=roger.chen@dianping.com
     #http://localhost:3000/api/v1/app/list?token=8b242e951d4fb822
     get "list" do 
-      { status: 200, app: current_user.projects.map{|p| { name: p.name, owner: p.owner.name }} }
+      { status: 200, app: current_user.projects.map{|p| { name: p.name, 
+                                                          owner: p.owner.name,
+                                                          ip: p.try(:machine).try(:ip),
+                                                          status: Machine::STATUS.invert[p.try(:machine).try(:status)]  }} }
     end
 
     #app user action
