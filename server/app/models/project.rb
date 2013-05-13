@@ -7,6 +7,7 @@ class Project < ActiveRecord::Base
 
   validates_presence_of :name, :owner_id
   validates_format_of :name, with: /\w+/
+  validates_uniqueness_of :name
 
   has_one :machine
   belongs_to :owner, class_name: 'User'
@@ -18,6 +19,15 @@ class Project < ActiveRecord::Base
   before_create :initialize_token_and_user
   after_create :mkdir
   after_destroy :rmdir
+
+  class << self
+    def create_with_owner(name, user)
+      project = Project.new(name: name)
+      project.owner = user
+      project.save
+      project
+    end
+  end
 
   def path
     @path ||= Pathname.new("#{Settings.diors.root_path}/#{slug}")

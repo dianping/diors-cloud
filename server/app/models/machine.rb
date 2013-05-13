@@ -74,6 +74,7 @@ class Machine < ActiveRecord::Base
         if !comm.test("grep -Fw '#{key.pub_key}' ~/.ssh/authorized_keys")
           comm.execute("echo '#{key.pub_key}' >> ~/.ssh/authorized_keys")
           self.keys << key
+          return true
         end
       end
     end

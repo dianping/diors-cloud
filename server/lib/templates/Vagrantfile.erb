@@ -2,13 +2,22 @@
 # vi: set ft=ruby :
 
 $script = <<SCRIPT
-  if [[ $(ip link show <%= nic %>> /dev/null 2>&1) -eq 0 ]]; then
+  $(cat /etc/network/interfaces | grep <%= nic %> > /dev/null 2>&1)
+  if [[ $? -ne 0 ]]; then
     sudo echo -e "\\n\\nauto <%= nic %> \\niface <%= nic %> inet static\\naddress <%= ip %> \\nnetmask 255.255.255.0\\ngateway <%= gateway %>" >> /etc/network/interfaces
     sudo ifup <%= nic %> >/dev/null 2>&1
     sudo ifconfig <%= nic %> up
     sudo route del default eth0
     sudo route add default netmask 0.0.0.0 gw <%= gateway %> dev <%= nic %> 
+    echo 'finish'
   fi
+SCRIPT
+
+
+$script_every_time = <<SCRIPT
+  sudo route del default eth0 >/dev/null 2>&1
+  ping <%= gateway %> -c 1 >/dev/null 2>&1
+  echo 'finish'
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -23,6 +32,5 @@ Vagrant.configure("2") do |config|
   end
   config.ssh.username = "<%= user %>"
   config.vm.provision :shell, inline: $script
-  config.vm.provision :shell, inline: "sudo route del default eth0"
-  config.vm.provision :shell, inline: "ping <%= gateway %> -c 1 >/dev/null 2>&1"
+  config.vm.provision :shell, inline: $script_every_time
 end

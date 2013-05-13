@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   has_many :owner_projects, class_name: 'Project', foreign_key: 'owner_id'
   has_many :keys
 
-  before_create :initialize_token
+  before_create :initialize_user
 
   def add_key(pub_key)
     key = Key.new(pub_key: pub_key)
@@ -22,7 +22,8 @@ class User < ActiveRecord::Base
   end
 
   private
-  def initialize_token
+  def initialize_user
+    self.name = self.email.split('@').first if self.email.present? && self.name.blank?
     self.token = SecureRandom.hex(8)
   end
 

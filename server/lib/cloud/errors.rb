@@ -1,8 +1,10 @@
 module Cloud
   class Errors
     include Enumerable
+    extend Forwardable
 
     attr_reader :messages
+    def_delegator :messages, :join
 
     def initialize
       @messages = []
@@ -26,5 +28,10 @@ module Cloud
       messages.empty?
     end
     alias_method :blank?, :empty?
+
+    def to_a
+      messages
+    end
+
   end
 end

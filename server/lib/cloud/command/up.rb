@@ -13,7 +13,7 @@ module Cloud
         if vagrantfile.exist?
           env.batch(true) do |batch|
             with_target_vms([]) do |vm|
-              batch.action(vm, :up)
+              batch.action(vm, :up) rescue Vagrant::Errors::VagrantError
             end
           end
           true

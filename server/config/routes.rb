@@ -14,7 +14,5 @@ DiorsCloud::Application.routes.draw do
     post 'password' => 'users/passwords#create', :as => :user_password
   end
 
-  require 'api'
-  DiorsCloud::API.logger Rails.logger
-  mount DiorsCloud::API => '/api'
+  mount ::API => '/api'
 end
