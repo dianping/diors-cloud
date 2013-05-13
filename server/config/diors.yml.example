@@ -10,7 +10,10 @@ production: &base
       list: BOX_LIST
       default: DEFAULT_BOX
     hubot:
-      token: HUBOT_TOKEN   
+      token: HUBOT_TOKEN 
+    dns_service:
+      ip: DNS_SERVICE_IP    
+      port: DNS_SERVICE_PORT
 
 development:
   <<: *base
