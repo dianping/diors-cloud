@@ -25,7 +25,8 @@ end
 
 gem 'jquery-rails'
 gem 'devise', '>= 2.2.3'
-gem 'vagrant', '1.2.2'
+gem 'ffi', '1.7.0'
+gem 'vagrant', :git => 'git://github.com/mitchellh/vagrant.git', :tag => 'v1.2.2'
 gem "friendly_id", "~> 4.0.9"
 gem "settingslogic", "~> 2.0.9"
 gem 'seed-fu', '2.2.0'
