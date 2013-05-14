@@ -33,5 +33,10 @@ module Cloud
       messages
     end
 
+    def |(message)
+      return message if self.empty?
+      messages.join(' ')
+    end
+
   end
 end

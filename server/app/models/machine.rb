@@ -1,3 +1,5 @@
+require 'shellwords'
+
 class Machine < ActiveRecord::Base
   attr_accessible :ip, :status, :uuid, :project_id
   
@@ -34,10 +36,12 @@ class Machine < ActiveRecord::Base
 
   def vm
     @vm ||= begin
-      return nil if env.active_machines.blank?
       env.active_machines.each do |(name, provider)|
         # We have only one machine per Vagrantfile now.
         return env.machine(name, provider)
+      end
+      env.machine_names.each do |name|
+        return env.machine(name, env.default_provider)
       end
     end
   end
@@ -76,6 +80,20 @@ class Machine < ActiveRecord::Base
           self.keys << key
           return true
         end
+      end
+    end
+    false
+  end
+
+  def unbind_key(key)
+    if vm_status_match?(:running) && key && key.pub_key.present?
+      vm.communicate.tap do |comm|
+        comm.execute("mkdir ~/.ssh", {error_check: false})
+        comm.execute("touch ~/.ssh/authorized_keys")
+        s = %Q[sed -i '/#{key.pub_key.gsub(/\//, "\\/")}/d' ~/.ssh/authorized_keys]
+        comm.execute(s)
+        self.keys.delete(key)
+        return true
       end
     end
     false

@@ -6,10 +6,9 @@ module Cloud
 
     class BindKey < Base
 
-      attr_reader :user, :pub_key
-      def initialize(project, user, pub_key)
-        super(project)
-        @user = user
+      attr_reader :pub_key
+      def initialize(project_id, user_id_or_email, pub_key)
+        super(project_id, user_id_or_email)
         @pub_key = pub_key
       end
 
@@ -25,6 +24,9 @@ module Cloud
         end
       end
 
+      register(:execute) do
+        Cloud::Notify::Hubot.send(user.email, errors | "The key has been binded.")
+      end
     end
   end
 end

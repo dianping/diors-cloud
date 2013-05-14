@@ -11,12 +11,13 @@ module Cloud
       extend Forwardable
       include Hooks::Base
 
-      attr_reader :project, :options, :errors
+      attr_reader :project, :user, :options, :errors
       def_delegators :machine, :vm
 
-      def initialize(project, options = {})
+      def initialize(project_id, user_id_or_email, options = {})
         options = default_options.merge(options)
-        @project = project 
+        @project_id = project_id
+        @user_id_or_email = user_id_or_email
         @options = options
         @errors = Errors.new
         super(nil, env)
@@ -48,6 +49,18 @@ module Cloud
         else
           errors.add("You can not do this action, the status of this machine is #{machine.vm_status}.")
           false
+        end
+      end
+
+      def project
+        @project ||= Project.find(@project_id)
+      end
+
+      def user
+        @user ||= if @user_id_or_email.is_a?(String)
+          User.find_by_email(@user_id_or_email)
+        else
+          User.find(@user_id_or_email)
         end
       end
 

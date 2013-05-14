@@ -6,10 +6,9 @@ module Cloud
 
     class ResetPassword < Base
 
-      attr_reader :user, :password
-      def initialize(project, user, password)
-        super(project)
-        @user = user
+      attr_reader :password
+      def initialize(project_id, user_id_or_email, password)
+        super(project_id, user_id_or_email)
         @password = password
       end
 
@@ -21,6 +20,9 @@ module Cloud
         end
       end
 
+      register(:execute) do
+        Cloud::Notify::Hubot.send(user.email, errors | "The password of `#{project.name}` has been reseted.")
+      end
     end
   end
 end

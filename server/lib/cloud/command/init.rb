@@ -6,13 +6,13 @@ module Cloud
     class Init < Base
 
       attr_reader :box
-      def initialize(project, box = Settings.diors.box.default)
-        super(project, {machine_required: false})
+      def initialize(project_id, user_id_or_email, box = Settings.diors.box.default)
+        super(project_id, user_id_or_email, {machine_required: false})
         @box = Settings.diors.box.list.include?(box) ? box : Settings.diors.box.default
       end
 
       def execute
-        require_args(:project)
+        require_args(:project, :user)
         begin
           if project.machine.present?
             errors.add("This project has been initialized.")
@@ -25,6 +25,10 @@ module Cloud
           return false
         end
         true
+      end
+
+      register(:execute) do
+        Cloud::Notify::Hubot.send(user.email, errors | "App `#{project.name}` has been initialized.\n Ip is #{init_params[:ip]}.\n Now you can type `diors app #{project.name} up` to start machine.")
       end
 
       def template_path

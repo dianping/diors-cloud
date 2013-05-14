@@ -41,9 +41,10 @@ module APIHelpers
     render_api_error!(message.join(' '), 404)
   end
 
-  def success!(resource = nil)
-    message = ["success"]
-    message << resource if resource
+  def waiting!(time = nil)
+    message = ["Please waiting"]
+    message << "about #{time} seconds" if time
+    message << "..."
     { status: 200, message: message.join(' ') }
   end
 
@@ -80,11 +81,4 @@ module APIHelpers
     user.save ? user : nil
   end
 
-  # def abilities
-  #   @abilities ||= begin
-  #                    abilities = Six.new
-  #                    abilities << Ability
-  #                    abilities
-  #                  end
-  # end
 end
