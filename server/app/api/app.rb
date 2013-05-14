@@ -17,15 +17,6 @@ class App < Grape::API
       waiting!
     end
 
-    #http://localhost:3000/api/v1/app/list?hubot_token=123456&email=roger.chen@dianping.com
-    #http://localhost:3000/api/v1/app/list?token=8b242e951d4fb822
-    get "list" do 
-      { status: 200, app: current_user.projects.map{|p| { name: p.name, 
-                                                          owner: p.owner.name,
-                                                          ip: p.try(:machine).try(:ip),
-                                                          status: Machine::STATUS.invert[p.try(:machine).try(:status)]  }} }
-    end
-
     #http://localhost:3000/api/v1/app/roger1/user/add?user_account=ttt@dianping.com&hubot_token=123456&email=roger.chen@dianping.com
     get ":app_name/user/add" do 
       auth_project_owner!
