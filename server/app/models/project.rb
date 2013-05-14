@@ -52,6 +52,10 @@ class Project < ActiveRecord::Base
     users.exists?(user.id)
   end  
 
+  def domain
+    "#{slug}.diors.it"
+  end
+
   private
   def mkdir
     FileUtils.mkdir_p(path)

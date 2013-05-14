@@ -3,6 +3,8 @@ module Cloud
   module Command
 
     class Destroy < Base
+      
+      include Helpers
 
       def initialize(project_id, user_id_or_email, options = {force: true})
         super(project_id, user_id_or_email, options)
@@ -13,6 +15,7 @@ module Cloud
         with_vm { |vm| vm.action(:destroy, :force_confirm_destroy => options[:force]) and true }
       end
 
+      register(:execute) { release_ip(project.machine.ip, project.domain) }
       register(:execute) { project.clear }
       register(:execute) do
         Cloud::Notify::Hubot.send(user.email, errors | "Machine of `#{project.name}` has been destroyed.")
