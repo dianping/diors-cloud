@@ -104,3 +104,5 @@ tmp/restart.txt
 
 config/database.yml
 config/diors.yml
+
+config/recipes/templates/diors.yml.erb
