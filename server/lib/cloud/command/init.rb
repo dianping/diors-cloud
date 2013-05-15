@@ -29,7 +29,7 @@ module Cloud
         true
       end
 
-      register(:execute) { bind_ip(init_params[:ip], project.doamin) }
+      register(:execute) { bind_ip(init_params[:ip], project.domain) }
       register(:execute) do
         Cloud::Notify::Hubot.send(user.email, errors | "App `#{project.name}` has been initialized.\n Ip is #{init_params[:ip]}, domain is #{project.domain}.\n Now you can type `diors app #{project.name} up` to start machine.")
       end
