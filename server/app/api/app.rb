@@ -31,6 +31,8 @@ class App < Grape::API
 
     get ":app_name/user/delete" do 
       auth_project_owner!
+      user = User.find_by_email(params[:user_account])
+      not_found!("#{params[:user_account]}") unless user
       forbidden!('You can not delete yourself.') if current_project.owner == user
       CloudCommandWorker.perform_async(:unbind_key, current_project.id, current_user.id, params[:user_account])
       waiting!
