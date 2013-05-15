@@ -33,6 +33,7 @@ gem 'seed-fu', '2.2.0'
 gem 'sidekiq', '~> 2.11.2'
 gem "rest-client", "~> 1.6.7"
 gem 'redis', "~> 3.0.4"
+gem 'unicorn'
 
 group :development, :test do
   gem 'debugger'
