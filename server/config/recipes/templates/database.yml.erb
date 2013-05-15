@@ -1,0 +1,9 @@
+<% raise 'DB_PASSWORD is required.' if ENV['DB_PASSWORD'] == nil || ENV['DB_PASSWORD'].empty? %>
+production:
+  adapter: mysql2
+  encoding: utf8
+  database: diors_cloud
+  reconnect: false
+  pool: 25
+  username: root
+  password: "<%= ENV['DB_PASSWORD'] %>"
