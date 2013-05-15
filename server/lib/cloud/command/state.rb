@@ -11,9 +11,8 @@ module Cloud
         with_vm { |vm| @state = vm.state.id and true }
       end
 
-      register(:execute, skip_hook_when: false) { machine.to_suspend }
       register(:execute) do
-        Cloud::Notify::Hubot.send(user.email, errors | "Machine of `#{project.name}` is #{state}.")
+        Cloud::Notify::Hubot.send(user.email, errors | "Machine of `#{project.name}` is #{state}. Ip is #{project.machine.ip}. Domain is #{project.domain}.")
       end
     end
   end

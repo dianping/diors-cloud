@@ -137,7 +137,7 @@ module.exports = (robot) ->
         msg.send JSON.parse(body).message
 
   # command: diors app <app_name> state
-  robot.respond /diors app (\w+) state/i, (msg) ->
+  robot.respond /diors app (\w+) (state|status)/i, (msg) ->
     app_name = msg.match[1]
     msg.http("#{diors_api_url}/#{app_name}/inst/state")
       .query({'hubot_token': diors_api_token, 'email': user_email(msg)})

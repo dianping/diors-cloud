@@ -18,7 +18,7 @@ class API < Grape::API
     rack_response({'message' => '500 Internal Server Error', 'status' => 500 }, 500)
   end
 
-  get "/ping" do 
+  get ["/ping", "/test"] do 
     "pong"
   end
 

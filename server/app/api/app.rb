@@ -69,7 +69,7 @@ class App < Grape::API
       waiting!
     end
 
-    get ":app_name/inst/state" do 
+    get [":app_name/inst/state", ":app_name/inst/status"] do 
       auth_project_user!
       CloudCommandWorker.perform_async(:state, current_project.id, current_user.id)
       waiting!
